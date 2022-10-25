@@ -1,0 +1,45 @@
+Zad 1
+ps - wyswietla obecne procesy
+-e - wyswietl wszystkie procesy
+-f - full-format listing
+-u - userlist - wybor na podstawie user ID
+-t - wybor na podstawie tty
+-p - wybor na podstawie proces ID
+a) 2 procesy 
+Zad 2
+Uzycie komendy kill na procesie B nie wylaczylo procesu C ani procesu A, dzialaly one poprawnie do konca
+natomiast proces C juz nie byl dzieckiem procesu A tylko osobnym procesem
+
+Zad 3
+Za pomoca komendy trap to_exec nazwa_sygnalu, faktycznie skrypt przechwytuje dane sygnaly i wykonuje to co zaplanujemy, zamiast zakończenia pracy programu. Program który przechwytuje 15 pierwszych sygnałów z listy trap -l, jesteśmy wstanie uśmiercić za pomocą sygnału SIGKILL
+
+Zad 4 
+Ctrl + Z działa tak samo jak zawieszenie procesu sygnałem SIGSTOP.
+Proces ten można odwiesić za pomocą sygnału SIGCONT, komenda fg odwiesza proces tak samo jak SIGCONF i wyłaczenie procesu może odbyć sie za pomoca Ctrl + C, natomiast komenda bg odwiesza proces ale działa on w tle co za tym idzie nie okupuje danego okienka terminalu, nie można go wyłaczyć za pomoc Ctrl + C, ani zawiesić za pomocą Ctrl + Z
+
+Zad 5 
+Potoki są wykonywane z tego samego polecenia bash, ale działają równocześnie, to znaczy, żaden proces nie dziedziczy innego, tylko wykonują się na tym samym poziomie, czyli nie są pokrewne w sensie dziedziczenia
+\_ bash
+  \_ bash zad5.sh
+  | \_ sleep 1
+  \_ cat
+  \_ grep --color=auto 22
+  
+Zad 6
+W przypadku gdy jeden proces zapisuje do potoku za pomocą cat > FIFO (dane wpisywane ręcznie, wysyłane po kliknięciu przycisku enter), a pozostałe czytają cat FIFO.
+System rozdziela dane z potoku dwóm procesom w taki sposób, że dane otrzymują na zmianę, pierwszy otwarty proces otrzyma pierwszą linie, a drugi drugą. 
+Gdy zabijemy jeden z dwóch procesów czytających, wszystkie dane przechodzą do pozostałego procesu.
+Proces piszący czeka na dalsze dane, nawet gdy procesy czytające zostały wyłaczone. Natomiast po wpisaniu danych, kończy się jego działanie
+Proces czytający zostaje wyłaczony gdy proces piszący zostanie zabity, natomiast czeka on na dane po właczeniu.
+
+Zad 7
+Aby właczyć proces z danym priorytetem nice -n priorytet proces
+Aby zmienic priorytet sudo renice -n priorytet PID
+Sprawdzenie priorytetu ps -l, kolumna NI, lub komenda top kolumna NI
+Serwer diablo był nie dostępny podczas opracowywania zadnaia
+
+Zad 8
+
+
+
+
