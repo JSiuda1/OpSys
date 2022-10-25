@@ -1,0 +1,5 @@
+kot@mail.pl
+pies@mail.pl
+ryba@mail.pl
+koza@mail.pl
+kaczka@mail.pl

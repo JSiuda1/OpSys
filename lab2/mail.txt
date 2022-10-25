@@ -1,0 +1,3 @@
+Subject: SCR test
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eget rutrum nibh. Ut ut volutpat massa, a efficitur sapien. Donec tincidunt scelerisque tempor. Cras sed lobortis neque. Nam imperdiet vehicula dui, sed lobortis lorem. Sed felis eros, condimentum non pretium ut, vehicula eu nibh. Mauris non nunc eu purus fringilla imperdiet non sed nunc. Nulla facilisi. Aenean porttitor ligula non tempor porttitor. Ut eu semper nulla. Sed in iaculis neque. Vestibulum in nisi cursus, ultrices nibh vitae, mattis augue. Suspendisse convallis at ante hendrerit auctor.

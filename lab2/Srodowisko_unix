@@ -1,0 +1,33 @@
+Edytor okienkowy: Visual Studio Code
+Wyszukiwanie tekstu: Ctrl+F - wyszukiwanie w pliku, Ctrl+Shift+F - wyszukiwanie w calym projekcie
+Stworzenie nowego pliku: Ctrl + N
+Wylaczenie edytora: Ctrl + Q
+Wylacznie pliku: Ctrl + W
+Zapis wprowadzonych zmina: Ctrl + S
+Otwarcie pliku i jego modyfikacja: Ctrl + P
+Otwarcie edytora: w terminalu komenda code
+
+Edytor terminalowy: Nano
+Otwarcie edytora: w terminalu komenda nano
+Wylaczneie edytora: Ctrl + X
+Otwarcie istniejacego pliku: w terminalu nano nazwa_pliku
+Stworzenie nowego pliku i jego edycja: w terminalu nano nazwa_pliku
+Zapis zmian: Ctrl + O
+
+Zad 2
+Otworzenie strony przedmioty z poziomu terminala: firefox https://kcir.pwr.edu.pl/~witold/opsys/
+Nastepnie po pobraniu, przechodzimy do folderu w ktorym zostal zapisany plik,
+Otworzenie pdf poprzez terminal, xpdf nazwa_pliku.pdf
+
+II
+System operacyjny na ktorym zostalo wykonane cwiczenie: Mint-linux
+Polaczenie z serwerem panamint (serwer diablo w tym momencie byl niedostepny)
+ssh jsiuda@panamint.kcir.pwr.edu.pl
+Rozlaczenie z serwerem: logout
+Pobranie pliku z serwaera: scp jsiuda@panamint.kcir.pwr.edu.pl:sciezka_do_pliku sciezka_do_zapisu
+Dodanie pliku na serwer: scp jsiuda@panamint.kcir.pwr.edu.pl:nazwa_pliku sciezka_do_zapisu_na_serwerze
+Dodanie folderu na serwer: scp -r folder jsiuda@panamint.kcir.pwr.edu.pl:sciezka_do_zapisu
+Pobranie folderu z serwera: scp -r jsiuda@panamint.kcir.pwr.edu.pl:sciezka_do_pliku sciezka_do_zapisu
+
+
+
