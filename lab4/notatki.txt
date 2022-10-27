@@ -1,0 +1,32 @@
+zad 1
+Program bez funkcji sleep zabiera 100%cpu
+Gdy dodamy opóźnienie program już zabiera o wiele mniej cpu i praktycznie go nie widać w top
+zmiana czestotliwosci odswiezania top -d czas_s
+
+zad 2
+a) signal(SIGALRM, SIG_IGN); - całkowite ignorowanie sygnału SIGALRM
+b) signal(SIGALRM, signal_handler); 
+void signal_handler(int sig) {
+	printf("Przechwycony sygnał %d\n", sig); exit(0);
+} - sygnał został przechwycony, następnie program został zakończony
+c) signal(SIGALRM, signal_handler);
+void signal_hander(int sig) {
+	printf("Przechwycony sygnał %d\n");
+} - sygnał został przechwycony, a następnie program działa dalej
+
+signal
+sigprocmask
+sigemptyset
+sigaddset
+
+zad 3
+znajduja sie pliki procesu, które zawierają informacje o danym procesie
+np cat proc/pid/signal/ - pokazuje statusy sygnałów w programie
+zad4 
+tablice akcji znajdziemy w pliku proc/pid/signal, jest ona zapisana szesnastkowo
+SigIgn: 0000000000004000, po przekonwertowaniu na binarny dowiadujemy się że sygnał 15 (SIGTERM) jest blokowany
+
+zad5
+ls -l proc/pid/fd pokazuje zaleznosc pipe, 
+0 -> pokazuje czy program ma potok na wejściu np. pipe:[123]
+1 -> pokazuje czy program ma jakiś potok na swoim wyjscu pipe:[125]

@@ -3,16 +3,15 @@
 #include <time.h>
 
 int main() {
-    uint64_t i;
+    uint64_t i = 0;
     struct timespec req = {
         .tv_sec = 0,
-        .tv_nsec = 100,
+        .tv_nsec = 1000,
     };
-
+    
     while (1) {
-        i++;
         nanosleep(&req, NULL);
+        ++i;
     }
-
     return 0;
 }
