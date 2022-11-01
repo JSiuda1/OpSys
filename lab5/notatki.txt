@@ -1,0 +1,20 @@
+zad 1
+a*) TO DO
+strace - interpretuje i notuje wywołania systemowe które są wywoływane przez proces lub są otrzymywane przez proces
+
+-e ustalenie które wydarzenia mają być śledzone lub w jaki sposób
+-b 
+
+b)została wywołana funkcja write() - jest ot funkcja która umożliwa wysyłanie wiadomości między użytkownikami, kopiuje linie z terminala do innego terminala. Czyli kopiuje linie z wyjścia programu na terminal z którego został uruchomiony program.
+
+c)openat(AT_FDCWD</home/kuba/studia/sem5/OpSys/lab5>, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3</etc/ld.so.cache>
+
+d*)Napis został wyswietlony razem z identyfikatorem użytkownika, natomiast strace nie pokazało żadnego dodatkowego wywłoania zmiennej systemowej. Najprawdopodbniej getenv nie wywołuje funkcji systemowej, a tylko przekazuje wskaźnik na miejsce w pamięci w której jest zapisany identyfikator.
+
+ltrace wyświetlił tylko output programu oraz status po jego zakończeniu, 
+
+e)
+
+f) tak jest cały czas otwart z wywołaną funkcją systemową read strace -p PID
+
+g) Program został zabity przez zygnał SIGSEGV, oznacza on błąd naruszenia pamięci

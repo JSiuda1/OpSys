@@ -13,11 +13,13 @@ c) signal(SIGALRM, signal_handler);
 void signal_hander(int sig) {
 	printf("Przechwycony sygnał %d\n");
 } - sygnał został przechwycony, a następnie program działa dalej
+d)sigset_t set;
+sigemptyset(&set); - ustawienie zmiennej 
+sigaddset(&set, SIGALRM); - dodanie sygnału SIGALRM do zmiennej
+sigaddset(&set, SIGUSR1); - dodanie sygnału SIGUSR1 do zmiennej
+sigprocmask(SIG_BLOCK, &set, NULL); - blokowanie wyżej dodanych sygnałów
+sigprocmask(SIG_BLOCK, &set, NULL); - odblokowanie wyżej dodanych sygnałów
 
-signal
-sigprocmask
-sigemptyset
-sigaddset
 
 zad 3
 znajduja sie pliki procesu, które zawierają informacje o danym procesie
