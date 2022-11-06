@@ -1,20 +1,62 @@
 zad 1
-a*) TO DO
 strace - interpretuje i notuje wywołania systemowe które są wywoływane przez proces lub są otrzymywane przez proces
 
--e ustalenie które wydarzenia mają być śledzone lub w jaki sposób
--b 
+-e trace=nazwa_polecenia_systemoweg - ogranicza output do danego poleceniea
+-o nazwa_pliku.txt - zapis wyjścia do pliku txt
+-p nr_PID - podpięcie się do istniejącego procesu
+-t dodanie znaku czasowego
+-ttt dodanie czasu unixowego
+-T dodanie czasu trwania wywołań systemowych
+-c raport czasu spędzonego na poszczególnych wywołaniach
 
-b)została wywołana funkcja write() - jest ot funkcja która umożliwa wysyłanie wiadomości między użytkownikami, kopiuje linie z terminala do innego terminala. Czyli kopiuje linie z wyjścia programu na terminal z którego został uruchomiony program.
+Zad 2
+Została wywołana funkcja write() - jest ot funkcja która umożliwa wysyłanie wiadomości między użytkownikami, kopiuje linie z terminala do innego terminala. Czyli kopiuje linie z wyjścia programu na terminal z którego został uruchomiony program.
 
-c)openat(AT_FDCWD</home/kuba/studia/sem5/OpSys/lab5>, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3</etc/ld.so.cache>
+Zad 3
+strace -e trace=openat,open,creat ./out, funkcje openat, open i create zwracają deskryptory plików
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
 
-d*)Napis został wyswietlony razem z identyfikatorem użytkownika, natomiast strace nie pokazało żadnego dodatkowego wywłoania zmiennej systemowej. Najprawdopodbniej getenv nie wywołuje funkcji systemowej, a tylko przekazuje wskaźnik na miejsce w pamięci w której jest zapisany identyfikator.
+Zad 4
+Napis został wyświetlony razem z identyfikatorem użytkownika, natomiast strace nie pokazało żadnego dodatkowego wywołania zmiennej systemowej, ponieważ getenv jest funkcją biblioteczną a nie systemową.
+W przypadku ltrace widać wywołanie funkcji bibliotecznej getenv() która zwraca identyfikator użytkownika.
+kompliacja dla ltrace -no-pie
+Zad 5
+strace -e trace=file ./out
+/etc/ld.so.cache - zawiera listę w których powinny być szukane współdzielone biblioteki
+/lib/x86_64-linux-gnu/libc.so.6
 
-ltrace wyświetlił tylko output programu oraz status po jego zakończeniu, 
+Zad 6 
+sudo strace -e trace=openat,close -p PID - wyświetla tylko otwarcia oraz zamknięcia plików
+Plik nie jest cały czas otwarty, otwarcie następuje przy zapisie, odczycie, natomiast po zakończeniu operacji jest odrazu zamykany
 
-e)
+Zad 7
+Program został zabity przez zygnał SIGSEGV, oznacza on błąd naruszenia pamięci
 
-f) tak jest cały czas otwart z wywołaną funkcją systemową read strace -p PID
+Zad 8
+strace z argumentem -c, pokazuje ile trwały poszczególne wywołania systemowe
+ltrace pokazuje ile trwały poszczególne wywołania funkcji bibliotecznych
+na podstawie otwartych programów (xclock, firefox), można stwierdzić że najwięcej czasu zabiera mapowanie pamięci mmap()
 
-g) Program został zabity przez zygnał SIGSEGV, oznacza on błąd naruszenia pamięci
+Zad 9 
+truss 
+-r fd - pokazuje cały kontekst I/O buffora dla każdego wywołania read()
+-s signal - pokazuje sygnały jakie otrzymał program
+-t syscall - pokazuje wybrane wywołania systemowe
+-u 
+-w fd - pokazuje cały kontekst I/O buffora dla każdego wywołania write()
+została wywołana funkcja systemowa write()
+
+Zad 10
+truss -t open bash
+/home/jsiuda/.bash_history
+/opt/csw/lib/sparcv9/libintl.so
+
+Zad 11
+truss -u libc::printf -c ls
+
+Zad 12
+truss -t open
+Tak samo jak w przypadku zadania 6  plik nie jest cały czas otwarty, program otwiera go podczas zapisu i następnie go zamyka
+
+
