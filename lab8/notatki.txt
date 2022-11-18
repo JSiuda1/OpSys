@@ -1,0 +1,18 @@
+Zad 2
+Nie nie jest taka sama, wykonywanie sie wątków z reguły jest niedeterministyczne.
+
+Zad 3
+Argument jest przekazywany przez wskaźnik, więc zanim task po sleepie obierze argument zostanie on nadpisany
+a) w przypadku long mozna nie podawac przez referencje tylko przez kopie
+b) można odczekać w mainie chwile tak aby wątek odebrał argument
+
+Zad 4
+
+Wątki nie wykonują się do końca
+Trzeba dodać pthread_exit(NULL) w main tak aby program oczekał na ich skończenie
+
+Zad 5
+Stack wątka wynosi 8388608 bajtów, każdy wątek ptogramu tworzy tablice 2 molionów elementów typu double, co za tym idzie
+zajmuje ona 16 milionów bajtów czyli więcej niż stak wątku.
+* można zmniejszyć wielkość tabilcy do 1000000
+* można zmienić wielkość stacku wątku
