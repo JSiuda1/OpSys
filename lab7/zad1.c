@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <sys/mman.h>
 #include <stdlib.h>
@@ -61,6 +63,19 @@ int main(int argc, char *argv[]){
         }
 
         ftruncate(memory_file_fd, file_stat.st_size);
+
+        munmap(memory_ptr, memory_file_stat.st_size);
+
+        memory_ptr = mmap(
+            NULL,
+            file_stat.st_size,
+            PROT_READ | PROT_WRITE,
+            MAP_SHARED,
+            memory_file_fd,
+            0
+        );
+
+
         fstat(memory_file_fd, &memory_file_stat);
         memcpy(memory_ptr, file_memory_ptr, memory_file_stat.st_size);
 

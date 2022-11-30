@@ -12,7 +12,6 @@ Wątki nie wykonują się do końca
 Trzeba dodać pthread_exit(NULL) w main tak aby program oczekał na ich skończenie
 
 Zad 5
-Stack wątka wynosi 8388608 bajtów, każdy wątek ptogramu tworzy tablice 2 molionów elementów typu double, co za tym idzie
-zajmuje ona 16 milionów bajtów czyli więcej niż stak wątku.
+Stack wątka wynosi 8388608 bajtów, każdy wątek ptogramu tworzy tablice 2 milionów elementów typu double, co za tym idzie zajmuje ona 16 milionów bajtów czyli więcej niż stak wątku.
 * można zmniejszyć wielkość tabilcy do 1000000
 * można zmienić wielkość stacku wątku

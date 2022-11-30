@@ -41,7 +41,9 @@ int main() {
             exit(-1);
         }
     }
-    sleep(1);
+    for (int i = 0; i < THREAD_NUM; ++i) {
+        pthread_join(threads[i], NULL);
+    }
 
     double pi_sum = 0;
     for (int i = 0; i < THREAD_NUM; ++i) {

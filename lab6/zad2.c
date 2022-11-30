@@ -26,10 +26,9 @@ int main(int argc, char* argv[]) {
 
     if (fork_id == 0) { //child process
         close(pipfd[1]); //close child write pipe
-        while(read(pipfd[0], &data, sizeof(data)) > 0) {
-            printf("%c", data);
-        }
-
+        close(0); // close stdin (zero descirptor)
+        dup(pipfd[0]);  //redirect pipe to stdin (zero descriptor)
+        execlp("display", "display", (char*)NULL);
     } else { //parent process
         FILE *fptr;
         fptr = fopen(argv[1], "r");

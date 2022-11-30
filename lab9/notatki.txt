@@ -1,0 +1,16 @@
+Zad 1.
+a) Nie nie tworzy wątków
+   Można, np liczyć każdy iloczyn na osobnym wątku
+b) Nie, globalba suma nie jest taka sama
+
+Zad 2
+Moje rozwiązanie nie korzysta z mutexow i zmiennej globalnej
+Program pierwszy działa podobnie jak poprzednie tylko do nadpisanie zmiennej globalnej wykorzystuje mutex,
+drugi program wpisuje dane do dwóch zmiennych globalnych, sumy poprzez mutex, oraz do tablicy już bez pośrednio, nie dochodzi do wyścigu ponieważ wątki obsługują różne obaszry tej tablicy.
+
+Ciężko stwierdzić który jest szybszy bo robią dwie inne rzeczy, natomiast program dot product jest bardziej zasobożerny ponieważ kopiuje globalną tablice do taska, co za tym idzie alokuje dużą ilość pamięci.
+Durgi program tego nie robi ponieważ kożysta z tablicy globalnej.
+
+Zad 3
+Program się zacina. Dwa pozostałe wątki oczekujące nadal czekają na sygnał przez co program się zacina.
+Aby program działał poprawnie, po otrzymaniu sygnału przez wątek należy przekazać ten sygnał do następnego wątku oczekującego
