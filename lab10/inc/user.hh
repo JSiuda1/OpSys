@@ -2,6 +2,8 @@
 
 #include <string>
 #include <atomic>
+#include <memory>
+#include <iostream>
 
 struct DataToHack {
     std::string mail;
@@ -24,4 +26,9 @@ struct UserHackedData {
         hashed_password(hashed_paasswd),
         hacked_password(hacked_passwd)
     {};
+};
+
+struct DataToHackCollection {
+    std::shared_ptr<DataToHack[]> data;
+    size_t size;
 };

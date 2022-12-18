@@ -8,7 +8,7 @@ CFLAGS = -Wall -Werror
 INCLUDES = -I inc/
 
 # define any libraries to link into executable:
-LIBS =  -lm
+LIBS =  -lm -lssl -lcrypto
 
 # define the C source files
 SRCS = src/main.cpp \
