@@ -61,6 +61,7 @@
         "set": "cpp",
         "optional": "cpp",
         "typeindex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "condition_variable": "cpp"
     }
 }
