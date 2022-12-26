@@ -67,7 +67,7 @@ void *watch_count(void *idp)
     pthread_cond_wait(&count_threshold_cv, &count_mutex);
     printf("***Thread %ld Condition signal received.\n", my_id);
     }
-  pthread_cond_signal(&count_threshold_cv);
+  pthread_cond_signal(&count_threshold_cv);  // fix
   pthread_mutex_unlock(&count_mutex);
   pthread_exit(NULL);
 }

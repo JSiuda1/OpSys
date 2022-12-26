@@ -27,7 +27,7 @@ double get_actual_time_in_us()
 
 
 double  sum=0.0, a[ARRAYSIZE];
-pthread_mutex_t sum_mutex;
+pthread_mutex_t sum_mutex;  
 
 
 void *do_work(void *tid) 

@@ -20,7 +20,7 @@ double get_actual_time_in_us()
 }
 
 
-/*   
+/*
 The following structure contains the necessary information  
 to allow the function "dotprod" to access its input data and 
 place its output so that it can be accessed later. 

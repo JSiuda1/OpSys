@@ -1,16 +1,49 @@
 Zad 1.
 a) Nie nie tworzy wątków
    Można, np liczyć każdy iloczyn na osobnym wątku
-b) Nie, globalba suma nie jest taka sama
+b) Program liczby iloczyn skalarny, ale liczenie jest podzielone na wątki, gdzie każdy z nich liczy osobną część iloczynu. Nie, globalba suma nie jest prawidłowa i różni się za każdym razem. Spowodowane jest to tym że każdy wątek dodaje wyniki każdego mnożenia do zmiennej globalnej.
+Naprawić program można np. poprzez zwracanie sumy z wątku lub zabezpieczyć zapis za pomocą mutexa.
+void *dotprod(void *arg) {
+	long * thread_sum = (long*)malloc(sizeof(long));
+   	*thread_sum = 0;
+   	...
+   	pthread_exit(thread_sum);
+}
+
+int main() {
+	long *ret;
+	for(i=0; i<NUMTHRDS; i++) {
+   		pthread_join(threads[i], (void**)&ret);
+   		sum += *ret;
+	}
+}
 
 Zad 2
-Moje rozwiązanie nie korzysta z mutexow i zmiennej globalnej
-Program pierwszy działa podobnie jak poprzednie tylko do nadpisanie zmiennej globalnej wykorzystuje mutex,
-drugi program wpisuje dane do dwóch zmiennych globalnych, sumy poprzez mutex, oraz do tablicy już bez pośrednio, nie dochodzi do wyścigu ponieważ wątki obsługują różne obaszry tej tablicy.
+Program dotprod_mutex liczy iloczyn skalarny dwóch wektorów, gdzie każdy wątek ma dostęp do wspólnej tablicy lecz nie działają one na tych samych obszarach pamięci, co więcej wątki tylko odczytują wartości jakie znajdują się w tablicy więc do wyścigu by nie doszło. Suma jest dodawana do zmiennej globalnej i chroniona przez mutex, więc nie dochodzi do wyścigu i wynik jest poprawny.
 
-Ciężko stwierdzić który jest szybszy bo robią dwie inne rzeczy, natomiast program dot product jest bardziej zasobożerny ponieważ kopiuje globalną tablice do taska, co za tym idzie alokuje dużą ilość pamięci.
-Durgi program tego nie robi ponieważ kożysta z tablicy globalnej.
+Program arrayloops sumuje wszystkie elementy tablicy, program tworzy jedną tablice statyczną globalną. Wątki działają na różnych obszarach tablicy więc nie dochodzi do wyścigu mimo tego że wsytępuje operacja przypisania. Suma poszczególnych wątków jest dodawana do sumy globalnej, a operacja ta jest chroniona poprzez mutex.
+
+Ciężko stwierdzić który program jest szybszy i bardziej wydajny ponieważ liczą dwie inne rzeczy, więc nie mam możliwości porównania. Jeżeli chodzi o zasoby to program dotprod_mutex alokuje więcej pamięci ponieważ tworzy dwie tablice o wymiarze ARRAY_SIZE, gdy program arrayloops tworzy tylko jedną.
 
 Zad 3
+a)
+Są dwa wątki liczące które inkrementują zmienną, gdy zmienna osiągnie wartość COUNT_LIMIT zostaje wysłany sygnał do wątku oczekującego. Następnie wątek oczekujący kończy swoje działanie, a pozsotałe dwa wątki pracują aż warunek petli będzie nieprawdziwy.
+
+b)
 Program się zacina. Dwa pozostałe wątki oczekujące nadal czekają na sygnał przez co program się zacina.
 Aby program działał poprawnie, po otrzymaniu sygnału przez wątek należy przekazać ten sygnał do następnego wątku oczekującego
+
+ while (count<COUNT_LIMIT) {
+    printf("***Before cond_wait: thread %ld\n", my_id);
+    pthread_cond_wait(&count_threshold_cv, &count_mutex);
+    printf("***Thread %ld Condition signal received.\n", my_id);
+    }
+  pthread_cond_signal(&count_threshold_cv); //fix
+  
+c) 
+Wątek oczekujący najpierw śpi a przez co przegapia sygnał, również funkcja pthread_cond_wait nie znajduje się w pętli while przez co program może nie działać poprawnie. by to naprawić nalezy dodać pętle z warunkiem poniżej, który skończy oczekiwanie gdy wszystkie wątki obliczą wszystko to co miały.
+
+while (count < ITERATIONS * (NUM_THREADS - 1)) {
+    printf("sub1: thread=%ld going into wait. count=%d\n",tid,count);
+    pthread_cond_wait(&count_condvar, &count_mutex);
+  }
