@@ -65,9 +65,5 @@ std::vector<std::string> CSV_File::get_column_by_number(unsigned int column_numb
 }
 
 size_t CSV_File::get_rows_number(void) {
-    if (rows.size() == 0) {
-        return 0;
-    }
-
-    return rows[0].size() + 1;
+    return rows.size();
 }
