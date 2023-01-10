@@ -13,11 +13,14 @@
 
 std::mutex passwords_mutex;
 std::condition_variable password_cv;
+
 std::list<UserHackedData> hacked_users;
 std::list<std::string> dictionary;
 DataToHackCollection users_data_set;
+
 const int task_count = 7;
 std::atomic_int finished_tasks_counter;
+std::atomic_bool force_shut_down_task;
 
 static void sighub_handler(int sig) {
     std::cout << "=============================="<< std::endl;
@@ -54,21 +57,6 @@ static void add_hacked_password_to_global(DataToHack *user_data, std::string hac
     std::unique_lock<std::mutex> lock(passwords_mutex);
     hacked_users.push_front(data);
     password_cv.notify_all();
-}
-
-void thread_one(void) {
-    char md5[33]; // 32 characters + null terminator
-    for (size_t i = 0; i < users_data_set.size; ++i) {
-	    for (std::string word : dictionary) {
-            bytes2md5(word.c_str(), word.length(), md5);
-
-            if (strcmp(md5, users_data_set.data[i].hashed_password.c_str()) == 0) {
-                add_hacked_password_to_global(&users_data_set.data[i], word);
-            }
-        }
-    }
-
-    finished_tasks_counter += 1;
 }
 
 bool check_word(std::string word, std::string hashed_pswd) {
@@ -125,6 +113,9 @@ void check_word_with_preposfix(std::string word, DataToHackCollection *data) {
 void thread_two(void) {
     for (std::string word : dictionary) {
         check_word_with_preposfix(word, &users_data_set);
+        if (force_shut_down_task == true) {
+            return;
+        }
     }
 
     finished_tasks_counter += 1;
@@ -134,6 +125,9 @@ void thread_all_upper(void) {
     for (std::string word : dictionary) {
         std::transform(word.begin(), word.end()+1, word.begin(), ::toupper);
         check_word_over_data_set(word, &users_data_set);
+        if (force_shut_down_task == true) {
+            return;
+        }
     }
 
     finished_tasks_counter += 1;
@@ -143,6 +137,9 @@ void thread_all_upper_postprefix(void) {
     for (std::string word : dictionary) {
         std::transform(word.begin(), word.end()+1, word.begin(), ::toupper);
         check_word_with_preposfix(word, &users_data_set);
+        if (force_shut_down_task == true) {
+            return;
+        }
     }
 
     finished_tasks_counter += 1;
@@ -152,6 +149,9 @@ void thread_first_upper(void) {
     for (std::string word : dictionary) {
         word[0] = toupper(word[0]);
         check_word_over_data_set(word, &users_data_set);
+        if (force_shut_down_task == true) {
+            return;
+        }
     }
 
     finished_tasks_counter += 1;
@@ -161,6 +161,9 @@ void thread_first_upper_postprefix(void) {
     for (std::string word : dictionary) {
         word[0] = toupper(word[0]);
         check_word_with_preposfix(word, &users_data_set);
+        if (force_shut_down_task == true) {
+            return;
+        }
     }
 
     finished_tasks_counter += 1;
@@ -169,6 +172,9 @@ void thread_first_upper_postprefix(void) {
 void thread_all_lower(void) {
     for (std::string word : dictionary) {
         check_word_over_data_set(word, &users_data_set);
+        if (force_shut_down_task == true) {
+            return;
+        }
     }
 
     finished_tasks_counter += 1;
@@ -177,6 +183,9 @@ void thread_all_lower(void) {
 void thread_all_lower_postprefix(void) {
     for (std::string word : dictionary) {
         check_word_with_preposfix(word, &users_data_set);
+        if (force_shut_down_task == true) {
+            return;
+        }
     }
 
     finished_tasks_counter += 1;
@@ -187,6 +196,9 @@ void thread_two_words(void) {
         for (std::string second_word : dictionary) {
             std::string two_word = first_word + " " + second_word;
             check_word_over_data_set(two_word, &users_data_set);
+            if (force_shut_down_task == true) {
+                return;
+            }
         }
     }
 
@@ -201,7 +213,13 @@ void consumer_thread(void) {
             UserHackedData new_data = hacked_users.front();
             std::cout << new_data.hashed_password << " ======> " << new_data.hacked_password << std::endl;
         }
+
+        if (force_shut_down_task == true) {
+            return;
+        }
     }
+
+    std::cout << "All task finished work\n\n" << std::endl;
 }
 
 static size_t load_data_from_file(std::string path, std::shared_ptr<DataToHack[]> &ptr_to_data_storage) {
@@ -239,30 +257,45 @@ static void load_dictionary_from_file(std::string path, std::list<std::string> &
 
 int main() {
     signal(SIGHUP, sighub_handler);
-    std::cout << "Loading data form file" << std::endl;
-    users_data_set.size = load_data_from_file("data_mini.txt", users_data_set.data);
-    std::cout << "Data loaded" << std::endl;
-    std::cout << "Loading dictionary form file" << std::endl;
-    load_dictionary_from_file("dict.txt", dictionary);
-    std::cout << "Dictionary loaded" << std::endl;
+    std::string data_path = "data.txt";
+    std::string dict_path = "test-dict-large.txt";
+    while (true) {
+        force_shut_down_task = false;
+        finished_tasks_counter = 0;
+        std::cout << "Loading data form file" << std::endl;
+        users_data_set.size = load_data_from_file(data_path, users_data_set.data);
+        std::cout << "Data loaded" << std::endl;
+        std::cout << "Loading dictionary form file" << std::endl;
+        load_dictionary_from_file(dict_path, dictionary);
+        std::cout << "Dictionary loaded" << std::endl;
 
-    std::thread th_all_upper(thread_all_upper);
-    std::thread th_all_upper_fix(thread_all_upper_postprefix);
-    std::thread th_all_lower(thread_all_lower);
-    std::thread th_all_lower_fix(thread_all_lower_postprefix);
-    std::thread th_first_upper(thread_first_upper);
-    std::thread th_first_upper_fix(thread_first_upper_postprefix);
-    std::thread th_two_words(thread_two_words);
-    std::thread th_consumer(consumer_thread);
+        std::thread th_all_upper(thread_all_upper);
+        std::thread th_all_upper_fix(thread_all_upper_postprefix);
+        std::thread th_all_lower(thread_all_lower);
+        std::thread th_all_lower_fix(thread_all_lower_postprefix);
+        std::thread th_first_upper(thread_first_upper);
+        std::thread th_first_upper_fix(thread_first_upper_postprefix);
+        std::thread th_two_words(thread_two_words);
+        std::thread th_consumer(consumer_thread);
 
-    th_all_upper.join();
-    th_all_upper_fix.join();
-    th_all_lower.join();
-    th_all_lower_fix.join();
-    th_first_upper.join();
-    th_first_upper_fix.join();
-    th_two_words.join();
-    th_consumer.join();
+        std::cout << "Input new dictionary path:\n";
+        std::cin >> dict_path;
+        std::cout << "Input new data path:\n";
+        std::cin >> data_path;
+        force_shut_down_task = true;
+
+        std::cout << "Waiting to shut down threads" << std::endl;
+        th_all_upper.join();
+        th_all_upper_fix.join();
+        th_all_lower.join();
+        th_all_lower_fix.join();
+        th_first_upper.join();
+        th_first_upper_fix.join();
+        th_two_words.join();
+        th_consumer.join();
+
+        dictionary.clear();
+    }
 
     return 0;
 }
